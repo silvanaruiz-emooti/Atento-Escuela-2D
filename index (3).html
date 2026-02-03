@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATENTO - Cuestionario Escuela</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 1000px;
+            margin: 0 auto;
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .header p {
+            font-size: 1em;
+            opacity: 0.95;
+        }
+
+        .student-select-section {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 15px;
+            text-align: left;
+        }
+
+        .student-select-section label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .student-select-section select,
+        .student-select-section input {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: none;
+            font-size: 1.1em;
+            margin-bottom: 15px;
+        }
+
+        .student-select-section button {
+            width: 100%;
+            padding: 12px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .student-select-section button:hover:not(:disabled) {
+            background: #218838;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .student-select-section button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .alumno-info {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+        }
+
+        .alumno-info p {
+            margin: 5px 0;
+            font-size: 1em;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 1.5em;
+            color: #667eea;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .field-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .field {
+            margin-bottom: 15px;
+        }
+
+        .field label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .field input[type="text"],
+        .field input[type="date"],
+        .field input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+        }
+
+        .field input:read-only {
+            background: #f5f5f5;
+            color: #666;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+            padding: 8px 15px;
+            border: 2px solid #ddd;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .radio-option:hover {
+            border-color: #667eea;
+            background: #f0f0ff;
+        }
+
+        .radio-option input {
+            margin-right: 8px;
+        }
+
+        .radio-option.selected {
+            border-color: #667eea;
+            background: #667eea;
+            color: white;
+        }
+
+        .items-header {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .item-row {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 20px;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px dashed #eee;
+        }
+
+        .item-text {
+            font-size: 0.95em;
+            color: #333;
+        }
+
+        .item-number {
+            font-weight: bold;
+            color: #667eea;
+            margin-right: 8px;
+        }
+
+        .likert-scale {
+            display: grid;
+            grid-template-columns: repeat(5, 50px);
+            gap: 10px;
+            justify-content: end;
+        }
+
+        .likert-option {
+            text-align: center;
+        }
+
+        .likert-option input {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .likert-option label {
+            display: block;
+            font-size: 0.75em;
+            color: #666;
+            margin-top: 4px;
+        }
+
+        .btn-container {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 15px 40px;
+            font-size: 1.1em;
+            font-weight: bold;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .progress-bar {
+            background: #e9ecef;
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .progress-fill {
+            background: #667eea;
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            text-align: center;
+            margin-top: 10px;
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .success-message {
+            text-align: center;
+            padding: 60px 30px;
+        }
+
+        .success-message h2 {
+            color: #28a745;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        .success-message p {
+            color: #666;
+            font-size: 1.2em;
+        }
+
+        @media (max-width: 768px) {
+            .likert-scale {
+                grid-template-columns: repeat(5, 40px);
+                gap: 5px;
+            }
+
+            .item-row {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .likert-scale {
+                justify-content: start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="app-container"></div>
+
+    <!-- Iframe oculto para envío sin CORS -->
+    <iframe name="atento-submit-iframe" style="display:none;"></iframe>
+
+    <script>
+    (function() {
+        'use strict';
+
+        // ========================================
+        // CONFIGURACIÓN GOOGLE SHEETS
+        // ========================================
+        const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbyL8e35UoKV1Wqv621umMOxA2BXQUakFQplYmB4GjGg32VfmMtZIEMGxAtP6y9hSbJBJw/exec';
+        
+        // ========================================
+        // LISTA DE ALUMNOS (EDITABLE)
+        // ========================================
+        const STUDENTS = [
+            { id: "49499681", full_name: "Matías Pantaleón Nouaux", edad: "4 años y 7 meses", sexo: "Niño", curso_etapa: " 2E",centro_escuela: "Fuenllana"  },
+            { id: "43290918", full_name: "Ignacio Santos Chillón", edad: "4 años y 9 meses", sexo: "Niño", curso_etapa: "2E", centro_escuela: "Fuenllana"  },
+          
+        ];
+        
+        // ========================================
+        // DATOS DEL CUESTIONARIO (JSON embebido)
+        // ========================================
+        const questionnaireData = {
+            "instrument": {
+                "name": "ATENTO - Cuestionario para la ESCUELA (3-6 años)",
+                "version": "importable_json"
+            },
+            "sections": [
+                {
+                    "id": "datos_alumno",
+                    "title": "Datos del alumno o alumna",
+                    "fields": [
+                        { "id": "nombre_id", "label": "Nombre / ID", "type": "text", "readonly": true },
+                        { "id": "edad", "label": "Edad", "type": "text", "readonly": true },
+                        { "id": "sexo", "label": "Sexo", "type": "text", "readonly": true },
+                        { "id": "fecha_evaluacion", "label": "Fecha de evaluación", "type": "date" },
+                        { "id": "centro_escuela", "label": "Centro / Escuela", "type": "text", "readonly": true },
+                        { "id": "curso_etapa", "label": "Curso y etapa", "type": "text", "readonly": true }
+                    ]
+                },
+                {
+                    "id": "datos_respondedor",
+                    "title": "Datos de la persona que va a responder este cuestionario",
+                    "fields": [
+                        { "id": "nombre_respondedor", "label": "Nombre (opcional)", "type": "text" },
+                        {
+                            "id": "relacion",
+                            "label": "¿Qué relación tiene con la persona evaluada?",
+                            "type": "radio",
+                            "options": ["Tutor/a", "Profesor/a", "Orientador/a", "Otra"]
+                        },
+                        { "id": "meses_conoce", "label": "¿Desde hace cuántos meses conoce a este alumno/a?", "type": "number" },
+                        {
+                            "id": "grado_conocimiento",
+                            "label": "¿Cuánto de bien conoce al alumno/a? (0 = Nada; 10 = Muy bien)",
+                            "type": "number",
+                            "min": 0,
+                            "max": 10
+                        }
+                    ]
+                },
+                {
+                    "id": "items",
+                    "title": "Ítems (frecuencia últimos 6 meses)",
+                    "response_scale": {
+                        "type": "likert_1_5",
+                        "options": [
+                            { "value": 1, "label": "Nunca o casi nunca" },
+                            { "value": 2, "label": "Pocas veces" },
+                            { "value": 3, "label": "Algunas veces" },
+                            { "value": 4, "label": "Muchas veces" },
+                            { "value": 5, "label": "Siempre o casi siempre" }
+                        ]
+                    },
+                    "questions": [
+                        { "id": 1, "text": "Le cuesta entregar las tareas a tiempo." },
+                        { "id": 2, "text": "Sus emociones cambian con mucha rapidez." },
+                        { "id": 3, "text": "Es difícil hacerle cambiar de opinión." },
+                        { "id": 4, "text": "Le cuesta explicar cuándo ha ocurrido lo que está contando (p. ej., ayer, hace unos días, en el verano...)." },
+                        { "id": 5, "text": "Trabaja de una forma más caótica o desordenada que los demás." },
+                        { "id": 6, "text": "Cuando algo no sale como esperaba se queda bloqueado/a sin saber qué hacer." },
+                        { "id": 7, "text": "Hay momentos en los que parece como si no reconociera dónde está." },
+                        { "id": 8, "text": "Hace las cosas con demasiada lentitud." },
+                        { "id": 9, "text": "Interrumpe a los demás (p. ej., en juegos o conversaciones)." },
+                        { "id": 10, "text": "Llora o se altera por cosas sin importancia." },
+                        { "id": 11, "text": "Hace las cosas sin prestar atención." },
+                        { "id": 12, "text": "Se pierde cuando tiene que seguir dos o tres instrucciones seguidas (p. ej., 'Ve al armario y saca las pinturas')." },
+                        { "id": 13, "text": "Tiene problemas para concentrarse." },
+                        { "id": 14, "text": "Le cuesta recordar el nombre de sus hermanos/as, padre o madre." },
+                        { "id": 15, "text": "Se confunde mucho cuando tiene que seguir varias instrucciones." },
+                        { "id": 16, "text": "Tiene cambios de humor repentinos y bruscos." },
+                        { "id": 17, "text": "Tiene dificultades para resolver mentalmente tareas sencillas." },
+                        { "id": 18, "text": "Se resiste a cambiar su forma habitual de hacer las cosas." },
+                        { "id": 19, "text": "Cualquier cosa, por pequeña que sea, le distrae de lo que está haciendo." },
+                        { "id": 20, "text": "Es excesivamente ruidoso/a." },
+                        { "id": 21, "text": "Le cuesta recordar y aplicar las reglas mientras juega (p. ej., juegos de mesa, de equipo...)." },
+                        { "id": 22, "text": "Corre o se mueve sin parar, como si tuviera un motor." },
+                        { "id": 23, "text": "Es poco consciente del paso del tiempo aunque se le recuerde que tiene que darse prisa." },
+                        { "id": 24, "text": "Hace las cosas de manera muy desordenada." },
+                        { "id": 25, "text": "Cuando se enfada o enoja golpea los muebles o da portazos." },
+                        { "id": 26, "text": "Los demás evitan relacionarse con él o ella por su comportamiento." },
+                        { "id": 27, "text": "Si se le dicen varias cosas a la vez solo recuerda la última." },
+                        { "id": 28, "text": "Se estresa fácilmente." },
+                        { "id": 29, "text": "Es muy impaciente." },
+                        { "id": 30, "text": "Parece que no escucha cuando se le habla." },
+                        { "id": 31, "text": "Confunde qué hora del día es (p. ej., si es por la mañana, si ha pasado la hora de comer...)." },
+                        { "id": 32, "text": "Le cuesta mucho mantener su concentración en las tareas o actividades." },
+                        { "id": 33, "text": "Necesita más ayuda que otros compañeros/as para adquirir los conocimientos." },
+                        { "id": 34, "text": "Le cuesta rectificar cuando se equivoca." },
+                        { "id": 35, "text": "Evita los juegos en los que tiene que concentrarse o pensar mucho (p. ej., puzles, rompecabezas...)." },
+                        { "id": 36, "text": "Si se le pide que haga algo con varios pasos olvida alguno (p. ej., 'Dibuja una flor y coloréala')." },
+                        { "id": 37, "text": "Empieza a hacer las cosas sin haber preparado antes lo que necesita." },
+                        { "id": 38, "text": "Se queja de picores en el cuerpo y se rasca mucho." },
+                        { "id": 39, "text": "Parece somnoliento/a o adormilado/a aunque haya dormido bien." },
+                        { "id": 40, "text": "Está más pendiente de lo que ocurre a su alrededor que de lo que está haciendo." },
+                        { "id": 41, "text": "Pierde cosas con facilidad." },
+                        { "id": 42, "text": "Se queda mirando fijamente al infinito." },
+                        { "id": 43, "text": "Le cuesta retener y comparar información mentalmente (p. ej., en juegos de emparejamiento de cartas, de unir con líneas...)." },
+                        { "id": 44, "text": "Le cuesta alcanzar los mismos objetivos fijados para el conjunto de la clase." },
+                        { "id": 45, "text": "Cuesta captar su atención aunque se le hable directamente a la cara." },
+                        { "id": 46, "text": "Se queja de tener hormigueo o adormecimiento en las manos o los pies." },
+                        { "id": 47, "text": "Al contar algo confunde términos como 'ayer', 'mañana', 'por la mañana', 'por la noche'..." },
+                        { "id": 48, "text": "Tiene reacciones emocionales desproporcionadas o exageradas." },
+                        { "id": 49, "text": "Los imprevistos lo ponen muy nervioso/a." },
+                        { "id": 50, "text": "Le cuesta terminar las cosas a tiempo." },
+                        { "id": 51, "text": "Le cuesta concentrarse en una sola cosa." },
+                        { "id": 52, "text": "Miente o engaña para conseguir lo que quiere." },
+                        { "id": 53, "text": "Cuando está sentado/a no deja de moverse en la silla." },
+                        { "id": 54, "text": "Cuando juega con otros niños/as termina discutiendo." },
+                        { "id": 55, "text": "Es muy desorganizado/a." },
+                        { "id": 56, "text": "Requiere más supervisión que el resto de sus compañeros/as." },
+                        { "id": 57, "text": "Le cuesta hacer tareas en las que haya que fijarse en varias cosas a la vez (p. ej., comparar dibujos, encontrar diferencias...)." },
+                        { "id": 58, "text": "Corretea o grita donde no debe hacerlo (p. ej., en los pasillos, en el comedor, en las aulas...)." },
+                        { "id": 59, "text": "Le cuesta controlar sus emociones." },
+                        { "id": 60, "text": "Tiene poca iniciativa, hay que insistirle mucho para que empiece las cosas." },
+                        { "id": 61, "text": "Se queja de rigidez en los músculos." },
+                        { "id": 62, "text": "Se niega a cumplir las normas o las peticiones de los adultos." },
+                        { "id": 63, "text": "Comete errores por descuido o distracción." },
+                        { "id": 64, "text": "Cuando cuenta algo confunde el orden en el que han ocurrido las cosas." },
+                        { "id": 65, "text": "Tiene que rehacer las cosas porque no había pensado bien cómo hacerlas." },
+                        { "id": 66, "text": "Golpea o empuja a otras personas (hermanos/as, compañeros/as...)." },
+                        { "id": 67, "text": "Tiene problemas para seguir el mismo ritmo de aprendizaje que sus compañeros/as." },
+                        { "id": 68, "text": "En clase le cuesta mucho mantener la atención durante las explicaciones." },
+                        { "id": 69, "text": "Si se le pide que dé un mensaje a alguien olvida lo que tenía que decir." },
+                        { "id": 70, "text": "Tiene problemas para relacionarse con la gente." },
+                        { "id": 71, "text": "Le cuesta permanecer sentado/a aunque sea poco tiempo." },
+                        { "id": 72, "text": "Parece que su pensamiento fuera más lento que el de los demás." },
+                        { "id": 73, "text": "Es muy inflexible, le cuesta adaptarse a los cambios." },
+                        { "id": 74, "text": "Los demás se quejan de que los molesta o fastidia durante los juegos." },
+                        { "id": 75, "text": "Habla demasiado." },
+                        { "id": 76, "text": "Se frustra con facilidad." },
+                        { "id": 77, "text": "Se queja de tener pitidos o ruidos molestos en los oídos." },
+                        { "id": 78, "text": "Cuando se enfada o enoja tira cosas o las rompe." },
+                        { "id": 79, "text": "Parece que pierde fuerza en las manos y se le caen las cosas." },
+                        { "id": 80, "text": "Actúa de forma impulsiva." },
+                        { "id": 81, "text": "Es agresivo/a." },
+                        { "id": 82, "text": "Parece cansado/a, como si tuviera poca energía." },
+                        { "id": 83, "text": "Cuando está haciendo una actividad le cuesta dejarla y pasar a otra." },
+                        { "id": 84, "text": "Le cuesta adaptar su ritmo de trabajo al tiempo que tiene para hacer las tareas." },
+                        { "id": 85, "text": "Cuando hace alguna actividad le cuesta mantenerse alerta o despierto/a." },
+                        { "id": 86, "text": "Necesita atención específica e individual dentro del aula." },
+                        { "id": 87, "text": "Los demás no quieren jugar o hacer trabajos con él o ella." },
+                        { "id": 88, "text": "Se distrae con facilidad." },
+                        { "id": 89, "text": "Le cuesta realizar tareas con dos o tres pasos (p. ej., 'Busca los globos y coloréalos en azul')." },
+                        { "id": 90, "text": "Durante las tareas se queda 'embobado/a' pensando en sus cosas." },
+                        { "id": 91, "text": "Mientras el profesor/a habla, interrumpe insistentemente para pedir aclaraciones o hacer comentarios." },
+                        { "id": 92, "text": "Le cuestan las tareas que requieren relacionar información (p. ej., comparar características, agrupar elementos...)." },
+                        { "id": 93, "text": "Presta atención a cualquier cosa menos a lo que está haciendo." },
+                        { "id": 94, "text": "Mientras hace las tareas dice que ve doble o borroso." },
+                        { "id": 95, "text": "Le cuesta pensar y ordenar los pasos que tiene que dar para conseguir algo." },
+                        { "id": 96, "text": "Le cuesta integrarse en los grupos." },
+                        { "id": 97, "text": "Desobedece abiertamente a los adultos aunque estén delante." },
+                        { "id": 98, "text": "Pierde enseguida el interés en las cosas y se aburre con facilidad." },
+                        { "id": 99, "text": "Sus rutinas son muy rígidas y difíciles de cambiar." },
+                        { "id": 100, "text": "Es muy desordenado/a." },
+                        { "id": 101, "text": "Su humor es muy cambiante." },
+                        { "id": 102, "text": "Responde antes de que le hayan terminado de preguntar." },
+                        { "id": 103, "text": "Rompe intencionadamente pertenencias de otras personas." },
+                        { "id": 104, "text": "Lo pasa mal cuando tiene que estar quieto/a mucho tiempo (p. ej., en clase, durante una representación...)." },
+                        { "id": 105, "text": "Dice o hace cosas que molestan a los demás." },
+                        { "id": 106, "text": "Olvida lo que tiene que hacer, aunque sean tareas cotidianas (p. ej., ir a un entrenamiento, a una extraescolar...)." },
+                        { "id": 107, "text": "Necesita más tiempo que otros compañeros/as para aprender los contenidos." },
+                        { "id": 108, "text": "'Pierde el hilo' de lo que está haciendo o diciendo." }
+                    ]
+                }
+            ]
+        };
+
+        // ========================================
+        // ESTADO DE LA APLICACIÓN
+        // ========================================
+        let selectedStudent = null;
+        const state = {
+            meta: {},
+            answers: {}
+        };
+
+        // ========================================
+        // PASO 1: SELECCIÓN DE ALUMNO
+        // ========================================
+        function renderStudentSelect() {
+            const container = document.getElementById('app-container');
+            
+            const escapeHtml = (str) => String(str).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");
+            
+            container.innerHTML = `
+                <div class="header">
+                    <h1>🧠 ATENTO</h1>
+                    <p>Cuestionario para la ESCUELA (3-6 años)</p>
+                    <div class="student-select-section">
+                        <label for="student-select">Selecciona el alumno/a:</label>
+                        <select id="student-select">
+                            <option value="">— Selecciona un alumno/a —</option>
+                            ${STUDENTS.map(s => `<option value="${escapeHtml(s.id)}">${escapeHtml(s.full_name)}</option>`).join('')}
+                        </select>
+                        
+                        <div id="student-preview" style="display:none; background: rgba(255,255,255,0.3); padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                            <p><strong>ID:</strong> <span id="preview-id"></span></p>
+                            <p><strong>Edad:</strong> <span id="preview-edad"></span></p>
+                            <p><strong>Sexo:</strong> <span id="preview-sexo"></span></p>
+                            <p><strong>Curso:</strong> <span id="preview-curso"></span></p>
+                        </div>
+                        
+                        <button id="continue-btn" disabled>Continuar con el cuestionario</button>
+                    </div>
+                </div>
+            `;
+
+            const select = document.getElementById('student-select');
+            const preview = document.getElementById('student-preview');
+            const btn = document.getElementById('continue-btn');
+
+            select.addEventListener('change', () => {
+                const id = select.value;
+                const student = STUDENTS.find(s => s.id === id);
+                
+                if (!student) {
+                    preview.style.display = 'none';
+                    btn.disabled = true;
+                    selectedStudent = null;
+                    return;
+                }
+
+                selectedStudent = student;
+                
+                document.getElementById('preview-id').textContent = student.full_name;
+                document.getElementById('preview-edad').textContent = student.edad + ' años';
+                document.getElementById('preview-sexo').textContent = student.sexo;
+                document.getElementById('preview-curso').textContent = student.curso_etapa;
+                document.getElementById('preview-curso').textContent = student.centro_escuela;
+                
+                preview.style.display = 'block';
+                btn.disabled = false;
+            });
+
+            btn.addEventListener('click', () => {
+                if (!selectedStudent) return;
+                
+                // Autocompletar campos
+                state.meta = {
+                    nombre_id: selectedStudent.full_name,
+                    edad: selectedStudent.edad,
+                    sexo: selectedStudent.sexo,
+                    curso_etapa: selectedStudent.curso_etapa,
+                    fecha_evaluacion: new Date().toISOString().split('T')[0],
+                    centro_escuela: selectedStudent.centro_escuela,
+                    nombre_respondedor: '',
+                    relacion: '',
+                    meses_conoce: '',
+                    grado_conocimiento: ''
+                };
+                
+                renderApp();
+            });
+        }
+
+        // ========================================
+        // PASO 2: CUESTIONARIO
+        // ========================================
+        function renderApp() {
+            const content = document.getElementById('app-container');
+            content.innerHTML = '';
+
+            const header = document.createElement('div');
+            header.className = 'header';
+            header.innerHTML = `
+                <h1>🧠 ATENTO</h1>
+                <p>Cuestionario para la ESCUELA (3-6 años)</p>
+                <div class="alumno-info">
+                    <p><strong>Alumno/a:</strong> ${selectedStudent.full_name}</p>
+                    <p><strong>Edad:</strong> ${selectedStudent.edad} años</p>
+                </div>
+            `;
+            content.appendChild(header);
+
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'content';
+            contentDiv.id = 'app-content';
+
+            // Renderizar secciones
+            questionnaireData.sections.forEach(section => {
+                if (section.id === 'items') {
+                    contentDiv.appendChild(renderItemsSection(section));
+                } else {
+                    contentDiv.appendChild(renderMetaSection(section));
+                }
+            });
+
+            // Barra de progreso
+            contentDiv.appendChild(renderProgressBar());
+
+            // Botones de acción
+            contentDiv.appendChild(renderActions());
+
+            content.appendChild(contentDiv);
+        }
+
+        function renderMetaSection(section) {
+            const div = document.createElement('div');
+            div.className = 'section';
+
+            const title = document.createElement('h2');
+            title.className = 'section-title';
+            title.textContent = section.title;
+            div.appendChild(title);
+
+            const grid = document.createElement('div');
+            grid.className = 'field-grid';
+
+            section.fields.forEach(field => {
+                const fieldDiv = document.createElement('div');
+                fieldDiv.className = 'field';
+
+                const label = document.createElement('label');
+                label.textContent = field.label;
+                fieldDiv.appendChild(label);
+
+                if (field.type === 'radio') {
+                    const radioGroup = document.createElement('div');
+                    radioGroup.className = 'radio-group';
+
+                    field.options.forEach(option => {
+                        const radioDiv = document.createElement('div');
+                        radioDiv.className = 'radio-option';
+                        
+                        const input = document.createElement('input');
+                        input.type = 'radio';
+                        input.name = field.id;
+                        input.value = option;
+                        input.id = `${field.id}_${option}`;
+                        if (state.meta[field.id] === option) {
+                            input.checked = true;
+                            radioDiv.classList.add('selected');
+                        }
+                        
+                        input.addEventListener('change', () => {
+                            state.meta[field.id] = option;
+                            updateRadioStyles(field.id);
+                        });
+
+                        const optionLabel = document.createElement('label');
+                        optionLabel.htmlFor = input.id;
+                        optionLabel.textContent = option;
+
+                        radioDiv.appendChild(input);
+                        radioDiv.appendChild(optionLabel);
+                        radioGroup.appendChild(radioDiv);
+                    });
+
+                    fieldDiv.appendChild(radioGroup);
+                } else {
+                    const input = document.createElement('input');
+                    input.type = field.type;
+                    input.id = field.id;
+                    if (state.meta[field.id] != null) input.value = state.meta[field.id];
+                    
+                    if (field.readonly) {
+                        input.readOnly = true;
+                    }
+                    
+                    if (field.min !== undefined) input.min = field.min;
+                    if (field.max !== undefined) input.max = field.max;
+
+                    input.addEventListener('input', () => {
+                        state.meta[field.id] = input.value;
+                    });
+
+                    fieldDiv.appendChild(input);
+                }
+
+                grid.appendChild(fieldDiv);
+            });
+
+            div.appendChild(grid);
+            return div;
+        }
+
+        function renderItemsSection(section) {
+            const div = document.createElement('div');
+            div.className = 'section';
+
+            const title = document.createElement('h2');
+            title.className = 'section-title';
+            title.textContent = section.title;
+            div.appendChild(title);
+
+            const header = document.createElement('div');
+            header.className = 'items-header';
+            header.textContent = 'Escala: 1 = Nunca o casi nunca · 2 = Pocas veces · 3 = Algunas veces · 4 = Muchas veces · 5 = Siempre o casi siempre';
+            div.appendChild(header);
+
+            section.questions.forEach(question => {
+                const row = document.createElement('div');
+                row.className = 'item-row';
+
+                const textDiv = document.createElement('div');
+                textDiv.className = 'item-text';
+                textDiv.innerHTML = `<span class="item-number">${question.id}.</span>${question.text}`;
+                row.appendChild(textDiv);
+
+                const scale = document.createElement('div');
+                scale.className = 'likert-scale';
+
+                section.response_scale.options.forEach(option => {
+                    const optionDiv = document.createElement('div');
+                    optionDiv.className = 'likert-option';
+
+                    const input = document.createElement('input');
+                    input.type = 'radio';
+                    input.name = `q_${question.id}`;
+                    input.value = option.value;
+                    input.id = `q_${question.id}_${option.value}`;
+
+                    input.addEventListener('change', () => {
+                        state.answers[question.id] = option.value;
+                        renderApp();
+                    });
+
+                    const label = document.createElement('label');
+                    label.htmlFor = input.id;
+                    label.textContent = option.value;
+
+                    if (state.answers[question.id] === option.value) {
+                        input.checked = true;
+                    }
+
+                    optionDiv.appendChild(input);
+                    optionDiv.appendChild(label);
+                    scale.appendChild(optionDiv);
+                });
+
+                row.appendChild(scale);
+                div.appendChild(row);
+            });
+
+            return div;
+        }
+
+        function renderProgressBar() {
+            const itemsSection = questionnaireData.sections.find(s => s.id === 'items');
+            const totalQuestions = itemsSection.questions.length;
+            const answeredCount = Object.keys(state.answers).length;
+            const percentage = Math.round((answeredCount / totalQuestions) * 100);
+
+            const div = document.createElement('div');
+            div.className = 'section';
+
+            const progressBar = document.createElement('div');
+            progressBar.className = 'progress-bar';
+
+            const progressFill = document.createElement('div');
+            progressFill.className = 'progress-fill';
+            progressFill.style.width = `${percentage}%`;
+            progressBar.appendChild(progressFill);
+
+            const progressText = document.createElement('div');
+            progressText.className = 'progress-text';
+            progressText.textContent = `Progreso: ${answeredCount} / ${totalQuestions} preguntas (${percentage}%)`;
+
+            div.appendChild(progressBar);
+            div.appendChild(progressText);
+
+            return div;
+        }
+
+        function renderActions() {
+            const div = document.createElement('div');
+            div.className = 'btn-container';
+
+            const itemsSection = questionnaireData.sections.find(s => s.id === 'items');
+            const missingItems = itemsSection.questions
+                .map(q => q.id)
+                .filter(id => state.answers[id] == null);
+
+            const btnCheck = document.createElement('button');
+            btnCheck.className = 'btn btn-secondary';
+            btnCheck.textContent = 'Comprobar faltantes';
+            btnCheck.addEventListener('click', () => {
+                if (missingItems.length === 0) {
+                    alert('✅ Todas las preguntas han sido respondidas!');
+                } else {
+                    alert(`Faltan ${missingItems.length} preguntas: ${missingItems.join(', ')}`);
+                }
+            });
+
+            const btnSubmit = document.createElement('button');
+            btnSubmit.className = 'btn btn-primary';
+            btnSubmit.textContent = 'Enviar Cuestionario';
+            btnSubmit.disabled = missingItems.length > 0;
+            btnSubmit.addEventListener('click', handleSubmit);
+
+            div.appendChild(btnCheck);
+            div.appendChild(btnSubmit);
+
+            return div;
+        }
+
+        function updateRadioStyles(fieldId) {
+            const radioOptions = document.querySelectorAll(`input[name="${fieldId}"]`);
+            radioOptions.forEach(radio => {
+                const parent = radio.parentElement;
+                if (radio.checked) {
+                    parent.classList.add('selected');
+                } else {
+                    parent.classList.remove('selected');
+                }
+            });
+        }
+
+        // ========================================
+        // ENVÍO A GOOGLE SHEETS
+        // ========================================
+        function handleSubmit() {
+            if (!GOOGLE_SHEETS_URL || !GOOGLE_SHEETS_URL.includes('/macros/s/') || !GOOGLE_SHEETS_URL.endsWith('/exec')) {
+                alert('⚠️ Por favor, configura la URL de Google Apps Script en el código.');
+                return;
+            }
+
+            const btn = event.target;
+            btn.disabled = true;
+            btn.textContent = 'Enviando...';
+
+            const payload = {
+                instrument: questionnaireData.instrument,
+                timestamp: new Date().toISOString(),
+                meta: state.meta,
+                answers: state.answers
+            };
+
+            console.log('[ATENTO] Enviando payload:', payload);
+
+            // Enviar vía iframe para evitar CORS
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = GOOGLE_SHEETS_URL;
+            form.target = 'atento-submit-iframe';
+            form.style.display = 'none';
+
+            const input = document.createElement('input');
+            input.name = 'payload';
+            input.value = JSON.stringify(payload);
+            form.appendChild(input);
+
+            document.body.appendChild(form);
+            form.submit();
+            form.remove();
+
+            // Esperar confirmación o timeout
+            const timeout = setTimeout(() => {
+                console.log('[ATENTO] Asumiendo éxito tras 10 segundos sin error');
+                showSuccess();
+            }, 10000);
+
+            window.addEventListener('message', function onMessage(e) {
+                if (e.data && e.data.type === 'EMOOTI_SUBMIT_SUCCESS') {
+                    clearTimeout(timeout);
+                    window.removeEventListener('message', onMessage);
+                    console.log('[ATENTO] Confirmación recibida');
+                    showSuccess();
+                } else if (e.data && e.data.type === 'EMOOTI_SUBMIT_ERROR') {
+                    clearTimeout(timeout);
+                    window.removeEventListener('message', onMessage);
+                    alert('Error al enviar: ' + (e.data.message || 'Error desconocido'));
+                    btn.disabled = false;
+                    btn.textContent = 'Enviar Cuestionario';
+                }
+            });
+        }
+
+        function showSuccess() {
+            const content = document.getElementById('app-container');
+            content.innerHTML = `
+                <div class="success-message">
+                    <h2>✅ Cuestionario enviado correctamente</h2>
+                    <p>Los datos han sido guardados en Google Sheets.</p>
+                </div>
+            `;
+        }
+
+        // ========================================
+        // INICIALIZACIÓN
+        // ========================================
+        window.addEventListener('DOMContentLoaded', () => {
+            console.log('[ATENTO] Iniciando aplicación');
+            renderStudentSelect();
+        });
+
+    })();
+    </script>
+</body>
+</html>
